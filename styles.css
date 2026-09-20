@@ -1,4 +1,3 @@
-
 :root {
   --bg: #FDFBF7;
   --bg-alt: #F5EEDF;
@@ -342,73 +341,29 @@ section {
   z-index: 1;
 } */
 
-@media (max-width: 720px) {
-  .hero {
-    flex-direction: column;
-    align-items: flex-start;
-    text-align: left;
-    padding-top: 40px;
-    padding-bottom: 100px;
-  }
-
-  .nav {
-    flex-wrap: wrap;
-    gap: 12px;
-    padding: 16px 20px;
-  }
-
-  .nav-links {
-    order: 3;
-    width: 100%;
-    flex-wrap: wrap;
-    gap: 14px;
-    justify-content: center;
-  }
-
-  .code-card {
-    position: static;
-    margin-top: 32px;
-    width: 100%;
-  }
-
-  .scroll-hint {
-    bottom: 12px;
-  }
-
-  .technologies, .about, .experience, .projects {
-    padding-left: 24px;
-    padding-right: 24px;
-  }
-
-  .project-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .skills-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (max-width: 480px) {
-  .tech-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .skills-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
 .btn-primary, .btn-secondary {
   display: inline-block;
   padding: 12px 24px;
   border-radius: 6px;
   font-weight: 600;
   font-size: 15px;
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .btn-primary { background: var(--accent); color: #fff; }
 .btn-secondary { border: 1.5px solid var(--border); }
+
+.btn-primary:hover {
+  background: #1d4ed8;
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-2px) scale(1.03);
+}
 
 /* Experience timeline */
 
@@ -543,6 +498,13 @@ section {
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 22px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15);
+  border-color: var(--accent);
 }
 
 .project-card p { color: var(--text-muted); font-size: 15px; }
@@ -596,9 +558,16 @@ section {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: color 0.2s ease, background 0.2s ease, transform 0.2s ease;
 }
 
-.connect-socials a:hover { color: var(--accent); }
+.connect-socials a:hover {
+  color: var(--accent);
+  background: var(--bg-alt);
+  transform: translateY(-2px);
+}
 
 /* Footer */
 
@@ -612,12 +581,114 @@ section {
   color: var(--text-muted);
 }
 
-/* Responsive */
+/* ============================
+   Responsive (kept at the very end
+   so these rules win the cascade)
+   ============================ */
 
-/* @media (max-width: 640px) {
-  .skills-grid, .project-grid { grid-template-columns: 1fr; }
-  .nav { padding: 16px 20px; }
-  section { padding: 48px 20px; }
-  .code-card { margin-top: 24px; width: 100%; }
+body { overflow-x: hidden; }
+
+/* Tablet */
+@media (max-width: 900px) {
+  .tech-grid { grid-template-columns: repeat(3, 1fr); }
+  .project-grid { grid-template-columns: 1fr 1fr; }
+  .hero h1 { font-size: clamp(36px, 7vw, 64px); }
 }
-*/
+
+/* Phone + small tablet */
+@media (max-width: 720px) {
+  .hero-text span[style*="white-space:nowrap"] {
+    white-space: normal !important;
+  }
+
+  .hero {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding-top: 40px;
+    padding-bottom: 100px;
+  }
+
+  .hero-role,
+  .hero-sub {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-actions {
+    justify-content: center;
+  }
+
+  .scroll-hint {
+    display: none;
+  }
+
+  .technologies h2,
+  .about h2,
+  .experience h2,
+  .skills h2,
+  .projects h2 {
+    text-align: center;
+  }
+
+  .nav {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 16px 20px;
+  }
+
+  .nav-links {
+    order: 3;
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 14px;
+    justify-content: center;
+  }
+
+  .code-card {
+    position: static;
+    margin-top: 32px;
+    width: 100%;
+  }
+
+  .scroll-hint {
+    bottom: 12px;
+  }
+
+  .technologies, .about, .experience, .projects {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .project-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .skills-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Phone */
+@media (max-width: 480px) {
+  .tech-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .project-preview {
+    height: 140px;
+  }
+
+  .hero h1 {
+    font-size: clamp(32px, 10vw, 44px);
+  }
+
+  .nav-right {
+    gap: 12px;
+  }
+}
