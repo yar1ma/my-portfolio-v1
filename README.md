@@ -7,7 +7,7 @@ About
 Full stack developer based in Ghana, working with React, Tailwind, Python, and SQL. Currently completing a data engineering course at ALX Africa. Previously a Data Specialist and Front End Developer at AYA Data. Currently freelancing, including work with Umar Farouk Farms.
 
 Live Site
-[Add your deployed Vercel URL here]
+(https://yarima-dev.vercel.app/)
 
 Tech Stack
 HTML5, CSS3, vanilla JavaScript
