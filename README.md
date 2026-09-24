@@ -1,34 +1,36 @@
-Yarima Zam-atu Faruku Salaga — Portfolio
+# Yarima Portfolio — React Version
 
-Personal developer portfolio built as a single-page site.
+## Setup
 
-About
+1. Copy your `nav-logo.png` into the `public/` folder (it's not included here — grab it from your old project).
+2. Install dependencies:
+   ```
+   npm install
+   ```
+3. Run locally:
+   ```
+   npm run dev
+   ```
+4. Build for production:
+   ```
+   npm run build
+   ```
 
-Full stack developer based in Ghana, working with React, Tailwind, Python, and SQL. Currently completing a data engineering course at ALX Africa. Previously a Data Specialist and Front End Developer at AYA Data. Currently freelancing, including work with Umar Farouk Farms.
+## Structure
 
-Live Site
-(https://yarima-dev.vercel.app/)
+- `src/components/` — Nav, Hero, Technologies, About, Experience, Skills, Projects, Connect, Footer
+- `src/pages/Home.jsx` — assembles all sections on the main page
+- `src/pages/TrackerWriteup.jsx` — the new write-up page for the Livestock GPS Tracker project, at `/tracker`
+- `src/index.css` — all your existing styles, unchanged, plus new `.article-page` styles for the write-up page
 
-Tech Stack
-HTML5, CSS3, vanilla JavaScript
-No build tools or frameworks — pure static site
+## What's new vs. the HTML version
 
-Features
-Responsive single-page layout with sticky navigation and active-section highlighting
-Light/dark mode toggle (persisted via localStorage)
-Rotating hero role text
+- Routing via `react-router-dom` — the tracker project now links to `/tracker`, a full write-up page
+- Everything else (design, sections, mobile responsiveness, hover effects) is preserved as-is
+- Deploy to Vercel the same way — just point it at this repo instead; Vercel auto-detects Vite
 
-Sections: Home, Technologies, About Me, Experience, Skills, Projects, Contact
+## Next: "Why Hire Me" and persona landing page
 
-Projects Featured
-
-Umar Farouk Farms — live site
-Livestock GPS Tracker — live site | code
-ML/AI Pipeline — code
-
-
-Contact
-
-Email: yarimasalaga29@gmail.com
-GitHub: github.com/yar1ma
-LinkedIn: linkedin.com/in/yarima-zam-atu-faruku-salaga
+Not built yet — say the word and we'll add:
+- A "Why Hire Me" button/section
+- The "which version of me do you want to meet" landing page with routes per persona (data / frontend / ML / infrastructure)
