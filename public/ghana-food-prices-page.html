@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ghana Food Prices</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Fraunces:opsz,wght@9..144,600&display=swap">
+<style>
+/* Layout: one column case study. Key numbers first, two index charts, market ranking, totals table, method. */
+:root{
+  --bg:#fcfcfb; --panel:#f4f4f1; --fg:#0b0b0b; --fg2:#52514e; --fg3:#7a7975; --line:#e4e3de; --grid:#ecebe7;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s6:#008300;
+  --accent:#2a78d6; --good:#0f7a4d;
+  --display:"Fraunces",Georgia,serif; --body:"IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#1a1a19; --panel:#232322; --fg:#f0efec; --fg2:#c3c2b7; --fg3:#97968e; --line:#3a3a38; --grid:#2c2c2a;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300; --accent:#3987e5; --good:#4cc38a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1a1a19; --panel:#232322; --fg:#f0efec; --fg2:#c3c2b7; --fg3:#97968e; --line:#3a3a38; --grid:#2c2c2a;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300; --accent:#3987e5; --good:#4cc38a; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.55;
+  padding-block:40px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:960px;margin:0 auto;display:flex;flex-direction:column;gap:48px}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(2rem,5vw,3rem);line-height:1.1;margin:0;text-wrap:balance}
+h2{font-family:var(--body);font-weight:600;font-size:1.15rem;margin:0 0 4px;text-wrap:balance}
+p{margin:0;max-width:65ch}
+.eyebrow{font-family:var(--mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--fg3)}
+.head{display:flex;flex-direction:column;gap:14px}
+.lede{font-size:1.15rem;color:var(--fg2)}
+.meta{display:flex;flex-wrap:wrap;gap:6px 20px;font-family:var(--mono);font-size:.78rem;color:var(--fg3)}
+.meta a{color:var(--accent)}
+.sub{color:var(--fg2);font-size:.92rem}
+.key{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.kcard{background:var(--panel);padding:20px;border-radius:6px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.kcard .n{font-family:var(--mono);font-size:clamp(1.8rem,6vw,2.8rem);font-weight:500;line-height:1.1;font-variant-numeric:tabular-nums}
+.kcard .l{font-size:.9rem;color:var(--fg2)}
+.kcard.usd .n{color:var(--good)}
+.charts{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.chart{display:flex;flex-direction:column;gap:8px;min-width:0}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px}
+.legend button{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-size:.85rem;color:var(--fg2);padding:2px 4px;border-radius:3px}
+.legend button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.legend button[aria-pressed="false"]{opacity:.4;text-decoration:line-through}
+.legend i{width:14px;height:3px;border-radius:2px;display:inline-block}
+.plot{position:relative}
+.plot svg{width:100%;height:auto;display:block;touch-action:pan-y}
+.tip{position:absolute;pointer-events:none;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px;font-size:.78rem;box-shadow:0 2px 8px rgba(0,0,0,.12);z-index:3;min-width:150px}
+.tip b{font-family:var(--mono);font-weight:500}
+.tip .r{display:flex;justify-content:space-between;gap:12px;font-variant-numeric:tabular-nums}
+.tip .r span:first-child{display:inline-flex;align-items:center;gap:6px;color:var(--fg2)}
+.tip i{width:8px;height:8px;border-radius:50%;display:inline-block}
+.axis text{font-family:var(--mono);font-size:10px;fill:var(--fg3)}
+.rows{display:flex;flex-direction:column;gap:10px}
+.row{display:grid;grid-template-columns:120px 1fr;gap:12px;align-items:center}
+.row .nm{font-size:.9rem;overflow-wrap:anywhere}
+.track{display:flex;align-items:center;gap:10px;min-width:0}
+.bar{height:14px;background:var(--s1);border-radius:0 4px 4px 0;flex:none}
+.val{font-family:var(--mono);font-size:.82rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+.val small{color:var(--fg3);font-size:.72rem;margin-left:8px}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{text-align:right;padding:8px 10px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+th:first-child,td:first-child{text-align:left}
+th{font-weight:500;color:var(--fg2);font-size:.8rem}
+td{font-family:var(--mono);font-size:.85rem}td:first-child{font-family:var(--body)}
+ol.steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;max-width:65ch}
+.sect{display:flex;flex-direction:column;gap:14px}
+@media (max-width:640px){.key,.charts{grid-template-columns:1fr}.row{grid-template-columns:96px 1fr}.val small{display:none}}
+@media (prefers-reduced-motion:no-preference){.bar{transition:width .4s ease}}
+</style>
+
+<div class="wrap">
+  <header class="head">
+    <span class="eyebrow">Data analysis case study</span>
+    <h1>Ghana staple food prices, 2006 to 2023</h1>
+    <p class="lede">Which staple foods rose fastest in price, and in which markets? Prices in cedis rose more than 1,600%. Prices in US dollars rose about 90%.</p>
+    <div class="meta"><span>Source: WFP Food Prices for Ghana</span><span>37,263 price records</span><span>Python, pandas, matplotlib</span><span id="repo"></span></div>
+  </header>
+
+  <section class="key" aria-label="Key numbers">
+    <div class="kcard"><span class="eyebrow">Maize, 2007 to 2022, in cedis</span><span class="n" id="k1"></span><span class="l">Wholesale price per kg</span></div>
+    <div class="kcard usd"><span class="eyebrow">Maize, 2007 to 2022, in US dollars</span><span class="n" id="k2"></span><span class="l">Same prices, converted at each year's rate</span></div>
+  </section>
+
+  <section class="sect">
+    <div><h2>Same prices, two currencies</h2>
+    <p class="sub">Each line shows the yearly median wholesale price per kg, with 2007 set to 100. The left chart uses cedis. The right chart uses US dollars. Most of the cedi rise comes from the falling value of the cedi.</p></div>
+    <div class="legend" id="legend"></div>
+    <div class="charts">
+      <div class="chart"><span class="eyebrow">In cedis</span><div class="plot" id="c1"></div></div>
+      <div class="chart"><span class="eyebrow">In US dollars</span><div class="plot" id="c2"></div></div>
+    </div>
+  </section>
+
+  <section class="sect">
+    <div><h2>Maize price change by market, 2019 to 2022</h2>
+    <p class="sub">Cedi price per kg, 15 markets with data in both years. Northern markets rose most. The coast and Tema rose least.</p></div>
+    <div class="rows" id="bars"></div>
+  </section>
+
+  <section class="sect">
+    <div><h2>Totals by staple</h2><p class="sub">Percent change in median wholesale price per kg.</p></div>
+    <div class="tablewrap"><table id="tbl"></table></div>
+  </section>
+
+  <section class="sect">
+    <h2>Method</h2>
+    <ol class="steps">
+      <li>Kept wholesale prices. Wholesale uses sack sizes and retail uses kg, so mixing them gives wrong trends.</li>
+      <li>Converted every price to price per kg, in cedis and in US dollars.</li>
+      <li>Kept six staples with data from 2006 to 2023: maize, millet, sorghum, cassava, imported rice and local rice.</li>
+      <li>Took the yearly median across markets and compared 2007 with 2022. 2023 holds data to July only.</li>
+    </ol>
+    <p class="sub">Limit: more markets reported from 2019, so early and late medians do not cover the same markets. Read small differences with care.</p>
+  </section>
+</div>
+
+<script>
+const REPO_URL = ""; // paste your GitHub repo link here
+const D = {"years": [2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022], "series": {"Maize": {"ghsIdx": [100.0, 208.8, 258.6, 214.7, 308.4, 417.6, 351.1, 489.3, 683.3, 683.3, 599.1, 633.6, 621.6, 696.7, 1219.3, 1725.8], "usdIdx": [100.0, 190.8, 167.6, 139.7, 184.8, 205.5, 147.9, 151.2, 167.5, 162.0, 128.0, 128.7, 110.3, 113.9, 192.5, 192.8], "ghs": [0.211, 0.44, 0.545, 0.452, 0.65, 0.88, 0.74, 1.031, 1.44, 1.44, 1.262, 1.335, 1.31, 1.468, 2.57, 3.637], "usd": [0.228, 0.435, 0.382, 0.318, 0.421, 0.468, 0.337, 0.345, 0.382, 0.369, 0.292, 0.293, 0.251, 0.26, 0.439, 0.439], "c0722": 1626, "u0722": 93, "c1922": 178, "u1922": 75}, "Millet": {"ghsIdx": [100.0, 202.0, 225.9, 206.8, 244.1, 355.9, 381.4, 362.7, 501.7, 508.5, 630.5, 739.7, 698.4, 898.3, 1103.4, 1759.4], "usdIdx": [100.0, 176.0, 148.9, 139.1, 153.3, 179.5, 179.1, 136.1, 125.5, 126.8, 137.7, 148.3, 123.9, 150.2, 183.2, 200.1], "ghs": [0.317, 0.641, 0.717, 0.656, 0.774, 1.129, 1.21, 1.151, 1.591, 1.613, 2.0, 2.346, 2.215, 2.849, 3.5, 5.581], "usd": [0.331, 0.583, 0.493, 0.46, 0.507, 0.594, 0.593, 0.451, 0.416, 0.42, 0.456, 0.491, 0.41, 0.497, 0.607, 0.662], "c0722": 1659, "u0722": 100, "c1922": 152, "u1922": 61}, "Sorghum": {"ghsIdx": [100.0, 188.4, 214.3, 211.5, 249.1, 317.0, 357.1, 357.1, 500.0, 500.0, 578.6, 675.8, 862.4, 934.3, 1128.7, 1796.7], "usdIdx": [100.0, 164.6, 142.7, 139.4, 146.8, 163.9, 161.2, 131.4, 125.7, 121.5, 127.8, 134.9, 150.8, 156.5, 181.9, 189.4], "ghs": [0.257, 0.484, 0.55, 0.543, 0.64, 0.814, 0.917, 0.917, 1.284, 1.284, 1.486, 1.736, 2.215, 2.4, 2.899, 4.615], "usd": [0.27, 0.444, 0.385, 0.376, 0.396, 0.443, 0.435, 0.355, 0.339, 0.328, 0.345, 0.364, 0.407, 0.423, 0.491, 0.512], "c0722": 1697, "u0722": 89, "c1922": 108, "u1922": 26}, "Cassava": {"ghsIdx": [100.0, 122.7, 150.8, 173.1, 182.7, 288.5, 384.6, 307.7, 341.3, 735.6, 692.3, 483.8, 1115.4, 1591.1, 1117.6, 1129.5], "usdIdx": [100.0, 105.5, 97.9, 110.9, 107.8, 143.6, 171.7, 97.7, 85.6, 175.5, 143.8, 93.8, 200.5, 255.7, 178.3, 125.8], "ghs": [0.143, 0.175, 0.215, 0.247, 0.261, 0.412, 0.549, 0.44, 0.488, 1.051, 0.989, 0.691, 1.593, 2.273, 1.597, 1.614], "usd": [0.155, 0.164, 0.152, 0.172, 0.167, 0.223, 0.267, 0.152, 0.133, 0.273, 0.223, 0.146, 0.311, 0.397, 0.277, 0.195], "c0722": 1030, "u0722": 26, "c1922": 1, "u1922": -37}, "Rice (imported)": {"ghsIdx": [100.0, 151.9, 180.7, 188.9, 211.3, 417.5, 465.4, 520.1, 739.1, 711.7, 676.2, 602.2, 548.4, 714.5, 766.5, 970.2], "usdIdx": [100.0, 130.9, 119.1, 123.7, 130.3, 207.5, 207.9, 160.3, 180.8, 172.3, 144.7, 125.0, 98.2, 118.3, 124.4, 110.2], "ghs": [0.731, 1.11, 1.32, 1.38, 1.544, 3.05, 3.4, 3.8, 5.4, 5.2, 4.94, 4.4, 4.007, 5.22, 5.6, 7.088], "usd": [0.78, 1.021, 0.929, 0.965, 1.016, 1.618, 1.621, 1.25, 1.41, 1.344, 1.129, 0.975, 0.766, 0.922, 0.971, 0.86], "c0722": 870, "u0722": 10, "c1922": 77, "u1922": 12}, "Rice (local)": {"ghsIdx": [100.0, 141.9, 175.5, 172.7, 204.8, 240.1, 273.0, 328.9, 444.1, 595.4, 611.8, 508.0, 487.3, 636.2, 653.1, 808.5], "usdIdx": [100.0, 124.4, 114.2, 111.3, 120.1, 122.2, 120.1, 112.4, 113.5, 142.9, 129.7, 100.9, 89.5, 106.1, 102.8, 91.3], "ghs": [0.608, 0.863, 1.067, 1.05, 1.245, 1.46, 1.66, 2.0, 2.7, 3.62, 3.72, 3.088, 2.963, 3.868, 3.971, 4.916], "usd": [0.653, 0.812, 0.745, 0.726, 0.784, 0.798, 0.784, 0.734, 0.741, 0.932, 0.846, 0.658, 0.584, 0.692, 0.671, 0.596], "c0722": 709, "u0722": -9, "c1922": 66, "u1922": 2}}, "markets": [{"m": "Garu", "p19": 0.94, "p22": 3.39, "pct": 261}, {"m": "Koforidua", "p19": 1.1, "p22": 3.59, "pct": 226}, {"m": "Tamale", "p19": 0.96, "p22": 3.0, "pct": 212}, {"m": "Bolga", "p19": 1.16, "p22": 3.39, "pct": 192}, {"m": "Kumasi", "p19": 1.61, "p22": 4.6, "pct": 187}, {"m": "Yendi", "p19": 0.86, "p22": 2.46, "pct": 186}, {"m": "Kintampo", "p19": 0.93, "p22": 2.66, "pct": 186}, {"m": "Sunyani", "p19": 1.15, "p22": 3.18, "pct": 175}, {"m": "Cape Coast", "p19": 1.9, "p22": 5.18, "pct": 173}, {"m": "Techiman", "p19": 1.15, "p22": 3.1, "pct": 169}, {"m": "Accra", "p19": 1.6, "p22": 4.11, "pct": 157}, {"m": "Hohoe", "p19": 1.41, "p22": 3.54, "pct": 151}, {"m": "Ejura", "p19": 1.14, "p22": 2.52, "pct": 121}, {"m": "Tema", "p19": 2.75, "p22": 6.0, "pct": 118}, {"m": "Sekondi/Takoradi", "p19": 2.2, "p22": 4.79, "pct": 117}]};
+const names = Object.keys(D.series);
+const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const colorOf = n => cssVar('--s' + (names.indexOf(n) + 1));
+const fmt = n => n.toLocaleString('en-US');
+const on = new Set(names);
+
+if (REPO_URL) document.getElementById('repo').innerHTML = '<a href="' + REPO_URL + '">View code on GitHub</a>';
+document.getElementById('k1').textContent = '+' + fmt(D.series.Maize.c0722) + '%';
+document.getElementById('k2').textContent = '+' + fmt(D.series.Maize.u0722) + '%';
+
+function niceMax(v){const p=Math.pow(10,Math.floor(Math.log10(v)));const f=v/p;return (f<=1?1:f<=2?2:f<=2.5?2.5:f<=5?5:10)*p}
+
+function lineChart(host, key, unit){
+  const W=520,H=300,L=44,R=12,T=12,B=28;
+  const vis = names.filter(n=>on.has(n));
+  const maxV = Math.max(100, ...vis.flatMap(n=>D.series[n][key]));
+  const ymax = niceMax(maxV), ticks=5;
+  const x = i => L + (W-L-R) * i/(D.years.length-1);
+  const y = v => T + (H-T-B) * (1 - v/ymax);
+  let s = '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Price index by year, '+unit+'"><g class="axis">';
+  for(let k=0;k<=ticks;k++){const v=ymax*k/ticks;s+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y(v)+'" y2="'+y(v)+'" stroke="'+cssVar('--grid')+'"/><text x="'+(L-6)+'" y="'+(y(v)+3)+'" text-anchor="end">'+fmt(Math.round(v))+'</text>'}
+  D.years.forEach((yr,i)=>{if(i%3===0||i===D.years.length-1)s+='<text x="'+x(i)+'" y="'+(H-8)+'" text-anchor="middle">'+yr+'</text>'});
+  s+='</g>';
+  vis.forEach(n=>{
+    const pts=D.series[n][key].map((v,i)=>x(i)+','+y(v)).join(' ');
+    s+='<polyline fill="none" stroke="'+colorOf(n)+'" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" points="'+pts+'"/>';
+    const last=D.series[n][key].length-1;
+    s+='<circle cx="'+x(last)+'" cy="'+y(D.series[n][key][last])+'" r="4" fill="'+colorOf(n)+'" stroke="'+cssVar('--bg')+'" stroke-width="2"/>';
+  });
+  s+='<line id="cl" y1="'+T+'" y2="'+(H-B)+'" stroke="'+cssVar('--fg3')+'" stroke-dasharray="3 3" visibility="hidden"/><g id="dots"></g>';
+  s+='<rect id="hit" x="'+L+'" y="'+T+'" width="'+(W-L-R)+'" height="'+(H-T-B)+'" fill="transparent"/></svg><div class="tip" hidden></div>';
+  host.innerHTML=s;
+  const svg=host.querySelector('svg'),tip=host.querySelector('.tip'),cl=host.querySelector('#cl'),dots=host.querySelector('#dots');
+  function move(e){
+    const r=svg.getBoundingClientRect(); const px=(e.clientX-r.left)/r.width*W;
+    let i=Math.round((px-L)/(W-L-R)*(D.years.length-1)); i=Math.max(0,Math.min(D.years.length-1,i));
+    cl.setAttribute('x1',x(i));cl.setAttribute('x2',x(i));cl.setAttribute('visibility','visible');
+    dots.innerHTML=vis.map(n=>'<circle cx="'+x(i)+'" cy="'+y(D.series[n][key][i])+'" r="4" fill="'+colorOf(n)+'" stroke="'+cssVar('--bg')+'" stroke-width="2"/>').join('');
+    const rows=vis.slice().sort((a,b)=>D.series[b][key][i]-D.series[a][key][i]).map(n=>'<div class="r"><span><i style="background:'+colorOf(n)+'"></i>'+n+'</span><b>'+fmt(Math.round(D.series[n][key][i]))+'</b></div>').join('');
+    tip.innerHTML='<div class="r"><b>'+D.years[i]+'</b><span>index</span></div>'+rows; tip.hidden=false;
+    const hw=host.getBoundingClientRect().width, tw=tip.offsetWidth, cx=x(i)/W*r.width;
+    tip.style.left=(cx+tw+16>hw? cx-tw-10 : cx+10)+'px'; tip.style.top='8px';
+  }
+  const hit=host.querySelector('#hit');
+  hit.addEventListener('pointermove',move);hit.addEventListener('pointerdown',move);
+  hit.addEventListener('pointerleave',()=>{tip.hidden=true;cl.setAttribute('visibility','hidden');dots.innerHTML=''});
+}
+
+function legend(){
+  const el=document.getElementById('legend'); el.innerHTML='';
+  names.forEach(n=>{
+    const b=document.createElement('button');b.type='button';b.setAttribute('aria-pressed',on.has(n));
+    b.innerHTML='<i style="background:'+colorOf(n)+'"></i>'+n;
+    b.onclick=()=>{if(on.has(n)){if(on.size>1)on.delete(n)}else on.add(n);render()};
+    el.appendChild(b);
+  });
+}
+
+function bars(){
+  const max=Math.max(...D.markets.map(m=>m.pct));
+  document.getElementById('bars').innerHTML=D.markets.map(m=>
+    '<div class="row"><span class="nm">'+m.m+'</span><div class="track"><div class="bar" style="width:calc('+(m.pct/max*100)+'% * 0.62)" title="'+m.m+': '+m.p19+' to '+m.p22+' cedis per kg"></div><span class="val">+'+m.pct+'%<small>'+m.p19.toFixed(2)+' to '+m.p22.toFixed(2)+' GHS/kg</small></span></div></div>').join('');
+}
+
+function table(){
+  const p=v=>(v>0?'+':'')+fmt(v)+'%';
+  document.getElementById('tbl').innerHTML='<thead><tr><th>Staple</th><th>Cedis, 2007 to 2022</th><th>US dollars, 2007 to 2022</th><th>Cedis, 2019 to 2022</th><th>US dollars, 2019 to 2022</th></tr></thead><tbody>'+
+   names.slice().sort((a,b)=>D.series[b].c0722-D.series[a].c0722).map(n=>{const s=D.series[n];return '<tr><td>'+n+'</td><td>'+p(s.c0722)+'</td><td>'+p(s.u0722)+'</td><td>'+p(s.c1922)+'</td><td>'+p(s.u1922)+'</td></tr>'}).join('')+'</tbody>';
+}
+
+function render(){
+  legend();
+  lineChart(document.getElementById('c1'),'ghsIdx','cedis');
+  lineChart(document.getElementById('c2'),'usdIdx','US dollars');
+  bars();
+}
+table(); render();
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',render);
+new MutationObserver(render).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+</script>
+</html>
