@@ -19,6 +19,110 @@
 
 * { box-sizing: border-box; }
 
+.split-landing {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+}
+
+.split-half {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  text-decoration: none;
+  color: #fff;
+}
+
+.split-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  transition: transform 0.4s ease;
+}
+
+.split-half:hover .split-bg {
+  transform: scale(1.06);
+}
+
+/* Data side: dot-and-line network pattern */
+.split-bg-data {
+  background-color: #0b1e3d;
+  background-image:
+    radial-gradient(circle, rgba(91, 141, 239, 0.5) 1.5px, transparent 1.5px),
+    repeating-linear-gradient(45deg, rgba(91, 141, 239, 0.08) 0, rgba(91, 141, 239, 0.08) 1px, transparent 1px, transparent 40px);
+  background-size: 34px 34px, 100% 100%;
+}
+
+/* Software side: code-line pattern */
+.split-bg-software {
+  background-color: #0d1117;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(46, 139, 122, 0.18) 0,
+    rgba(46, 139, 122, 0.18) 2px,
+    transparent 2px,
+    transparent 26px
+  );
+}
+
+.split-bg-ai {
+  background-color: #1a0b2e;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(168, 85, 247, 0.35) 0, transparent 45%),
+    radial-gradient(circle at 80% 70%, rgba(168, 85, 247, 0.25) 0, transparent 45%),
+    radial-gradient(circle, rgba(168, 85, 247, 0.4) 1.5px, transparent 1.5px);
+  background-size: 100% 100%, 100% 100%, 30px 30px;
+}
+
+.split-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.25);
+  transition: background 0.4s ease;
+}
+
+.split-half:hover .split-overlay {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.split-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.split-content h2 {
+  font-size: clamp(24px, 3.5vw, 40px);
+  margin-bottom: 24px;
+  letter-spacing: 0.02em;
+}
+
+.split-btn {
+  display: inline-block;
+  padding: 12px 28px;
+  border: 1.5px solid #fff;
+  border-radius: 4px;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.split-half:hover .split-btn {
+  background: #fff;
+  color: #0d1117;
+}
+
+@media (max-width: 900px) {
+  .split-landing {
+    flex-direction: column;
+  }
+}
+
 body {
   margin: 0;
   background: var(--bg);
@@ -717,4 +821,14 @@ body { overflow-x: hidden; }
   .nav-right {
     gap: 12px;
   }
+}
+
+.project-card h3 a:hover {
+  color: var(--accent);
+}
+
+.nav-right .nav-switch {
+  padding: 6px 12px;
+  font-size: 13px;
+  white-space: nowrap;
 }
